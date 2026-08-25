@@ -4,24 +4,18 @@
 [![Compose Multiplatform](https://img.shields.io/badge/Compose_Multiplatform-1.11.1-purple.svg)](https://www.jetbrains.com/lp/compose-multiplatform/)
 [![Parikshan](https://img.shields.io/badge/E2E-Parikshan_0.0.8-green.svg)](https://aryapreetam.github.io/parikshan)
 
-This repository is the official Compose Multiplatform (KMP) companion sample for the [Parikshan E2E Testing Framework](https://aryapreetam.github.io/parikshan). It demonstrates writing multiplatform UI tests in `commonTest` that execute natively across Desktop (JVM), Web (WasmJs), Android, and iOS with **zero modifications to production UI code**.
+This branch demonstrates how to test interactive forms, keyboard text inputs, and explicit Compose `Modifier.testTag` identifiers using the [Parikshan E2E Testing Framework](https://aryapreetam.github.io/parikshan).
 
 ## Tutorial & Documentation
-This project accompanies the [Your First Test (KMP Guide)](https://aryapreetam.github.io/parikshan/guides/your-first-test/).
+This branch accompanies the [Testing Forms & User Inputs Guide](https://aryapreetam.github.io/parikshan/guides/forms-and-inputs/).
 
-## Project Architecture
-A standard multiplatform project layout targeting Desktop (JVM), Web (Wasm), Android, and iOS:
-* `shared/` — Core business logic and Compose Multiplatform UI (`commonMain`) and E2E tests (`commonTest`).
-* `desktopApp/` — Desktop JVM application entry point.
-* `androidApp/` — Android application wrapper.
-* `webApp/` — Web WasmJs entry point.
-* `iosApp/` — iOS Xcode wrapper.
+## Key Code Components
+* `shared/src/commonMain/kotlin/org/parikshankmpsample/App.kt` — Greeting form with `OutlinedTextField` (`Modifier.testTag("name_input")`) and Greet button.
+* `shared/src/commonTest/kotlin/org/parikshankmpsample/SimpleGreetTest.kt` — Multiplatform test verifying text input, button clicking, and visibility assertions.
 
-## Running E2E Tests
-
-### 1. Fast Local Feedback (Desktop JVM)
-Executes in under 2 seconds without starting emulators or browser runtimes:
+## Running Tests
 ```bash
+# Run on Desktop JVM
 ./gradlew :shared:e2eJvmTest
 ```
 ### 2. Multi-Target Orchestrated Execution
@@ -38,3 +32,7 @@ Run tests across multiple platforms concurrently:
 ./gradlew :shared:e2eAndroidTest  # Android (Emulator / Device)
 ./gradlew :shared:e2eIosTest      # iOS (macOS host only)
 ```
+
+### Sample Branches
+- **main**: Quickstart baseline testing the default template (AppTest.kt).
+- **feature/greeting-form** (this branch): Interactive form testing (SimpleGreetTest.kt).
