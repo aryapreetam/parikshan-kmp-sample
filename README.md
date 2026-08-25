@@ -1,46 +1,40 @@
-This is a Kotlin Multiplatform project targeting Android, iOS, Web, Desktop (JVM).
+# Parikshan Compose Multiplatform (KMP) Sample
 
-* [/iosApp](./iosApp/iosApp) contains an iOS application. Even if you’re sharing your UI with Compose Multiplatform,
-  you need this entry point for your iOS app. This is also where you should add SwiftUI code for your project.
+[![Kotlin](https://img.shields.io/badge/Kotlin-2.4.10-blue.svg?logo=kotlin)](https://kotlinlang.org)
+[![Compose Multiplatform](https://img.shields.io/badge/Compose_Multiplatform-1.11.1-purple.svg)](https://www.jetbrains.com/lp/compose-multiplatform/)
+[![Parikshan](https://img.shields.io/badge/E2E-Parikshan_0.0.8-green.svg)](https://aryapreetam.github.io/parikshan)
 
-* [/shared](./shared/src) is for code that will be shared across your Compose Multiplatform applications.
-  It contains several subfolders:
-  - [commonMain](./shared/src/commonMain/kotlin) is for code that’s common for all targets.
-  - Other folders are for Kotlin code that will be compiled for only the platform indicated in the folder name.
-    For example, if you want to use Apple’s CoreCrypto for the iOS part of your Kotlin app,
-    the [iosMain](./shared/src/iosMain/kotlin) folder would be the right place for such calls.
-    Similarly, if you want to edit the Desktop (JVM) specific part, the [jvmMain](./shared/src/jvmMain/kotlin)
-    folder is the appropriate location.
+This repository is the official Compose Multiplatform (KMP) companion sample for the [Parikshan E2E Testing Framework](https://aryapreetam.github.io/parikshan). It demonstrates writing multiplatform UI tests in `commonTest` that execute natively across Desktop (JVM), Web (WasmJs), Android, and iOS with **zero modifications to production UI code**.
 
-### Running the apps
+## Tutorial & Documentation
+This project accompanies the [Your First Test (KMP Guide)](https://aryapreetam.github.io/parikshan/guides/your-first-test/).
 
-Use the run configurations provided by the run widget in your IDE's toolbar. You can also use these commands and options:
+## Project Architecture
+A standard multiplatform project layout targeting Desktop (JVM), Web (Wasm), Android, and iOS:
+* `shared/` — Core business logic and Compose Multiplatform UI (`commonMain`) and E2E tests (`commonTest`).
+* `desktopApp/` — Desktop JVM application entry point.
+* `androidApp/` — Android application wrapper.
+* `webApp/` — Web WasmJs entry point.
+* `iosApp/` — iOS Xcode wrapper.
 
-- Android app: `./gradlew :androidApp:assembleDebug`
-- Desktop app:
-  - Hot reload: `./gradlew :desktopApp:hotRun --auto`
-  - Standard run: `./gradlew :desktopApp:run`
-- Web app:
-  - Wasm target (faster, modern browsers): `./gradlew :webApp:wasmJsBrowserDevelopmentRun`
-  - JS target (slower, supports older browsers): `./gradlew :webApp:jsBrowserDevelopmentRun`
-- iOS app: open the [/iosApp](./iosApp) directory in Xcode and run it from there.
+## Running E2E Tests
 
-### Running tests
+### 1. Fast Local Feedback (Desktop JVM)
+Executes in under 2 seconds without starting emulators or browser runtimes:
+```bash
+./gradlew :shared:e2eJvmTest
+```
+### 2. Multi-Target Orchestrated Execution
+Run tests across multiple platforms concurrently:
+```bash
+# Run Desktop JVM, Web (Wasm), and Android concurrently
+./gradlew :shared:e2eTest --targets=jvm,wasm,android
 
-Use the run button in your IDE's editor gutter, or run tests using Gradle tasks:
+# Run for all configured targets (Desktop JVM, Web Wasm, Android, iOS)
+./gradlew :shared:e2eTest
 
-- Android tests: `./gradlew :shared:testAndroidHostTest`
-- Desktop tests: `./gradlew :shared:jvmTest`
-- Web tests:
-  - Wasm target: `./gradlew :shared:wasmJsTest`
-  - JS target: `./gradlew :shared:jsTest`
-- iOS tests: `./gradlew :shared:iosSimulatorArm64Test`
-
----
-
-Learn more about [Kotlin Multiplatform](https://www.jetbrains.com/help/kotlin-multiplatform-dev/get-started.html),
-[Compose Multiplatform](https://github.com/JetBrains/compose-multiplatform/#compose-multiplatform),
-[Kotlin/Wasm](https://kotl.in/wasm/)…
-
-We would appreciate your feedback on Compose/Web and Kotlin/Wasm in the public Slack channel [#compose-web](https://slack-chats.kotlinlang.org/c/compose-web).
-If you face any issues, please report them on [YouTrack](https://youtrack.jetbrains.com/newIssue?project=CMP).
+# Or run individual targets:
+./gradlew :shared:e2eWasmTest     # Web Wasm (Playwright)
+./gradlew :shared:e2eAndroidTest  # Android (Emulator / Device)
+./gradlew :shared:e2eIosTest      # iOS (macOS host only)
+```
